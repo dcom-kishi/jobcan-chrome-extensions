@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite';
-import { crx, defineManifest } from '@crxjs/vite-plugin';
+import { defineConfig } from 'vite'
+import { crx, defineManifest } from '@crxjs/vite-plugin'
 
 const manifest = defineManifest({
   manifest_version: 3,
@@ -15,7 +15,7 @@ const manifest = defineManifest({
   action: {
     default_popup: 'index.html',
   },
-});
+})
 
 export default defineConfig({
   plugins: [crx({ manifest })],
@@ -30,4 +30,4 @@ export default defineConfig({
       port: 5173,
     },
   },
-});
+})
