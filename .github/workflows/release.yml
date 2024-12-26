@@ -1,0 +1,60 @@
+name: Release Build
+
+on:
+    push:
+        tags:
+            - 'v*' # Trigger on tags starting with "v"
+
+jobs:
+    build-and-release:
+        runs-on: ubuntu-latest
+
+        steps:
+            # Checkout the repository
+            - name: Checkout Repository
+              uses: actions/checkout@v3
+
+            # Setup Node.js and pnpm
+            - name: Setup Node.js and pnpm
+              uses: actions/setup-node@v3
+              with:
+                  # Specify the required Node.js version
+                  node-version: 22.12.0
+                  cache: 'pnpm'
+            - name: Install pnpm
+              run: npm install -g pnpm
+
+            # Install dependencies
+            - name: Install Dependencies
+              run: pnpm install
+
+            # Run the build command
+            - name: Run Build
+              run: pnpm run build
+
+            # Compress the dist directory into a zip file (with a specified file name)
+            - name: Compress dist directory
+              run: zip -r jobcan-chrome-extensions.zip dist
+
+            # Create a release
+            - name: Create Release
+              id: create_release
+              uses: actions/create-release@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  tag_name: ${{ github.ref_name }} # Use the tag name
+                  release_name: 'Release ${{ github.ref_name }}' # Set the release name
+                  draft: false
+                  prerelease: false
+
+            # Upload the zip file as a release asset
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                  upload_url: ${{ steps.create_release.outputs.upload_url }}
+                  asset_path: ./jobcan-chrome-extensions.zip
+                  asset_name: jobcan-chrome-extensions.zip
+                  asset_content_type: application/zips
