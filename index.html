@@ -1,13 +1,58 @@
 <!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + TS</title>
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>jobcan-chrome-extensions</title>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+        />
+        <style>
+            body {
+                background-color: #f8f9fa;
+            }
+            .header {
+                background-color: #007bff;
+                color: white;
+                padding: 30px 0;
+                text-align: center;
+            }
+            .content {
+                margin: 20px;
+            }
+            .feature-list {
+                list-style: none;
+                padding: 0;
+            }
+            .feature-list li {
+                background: #007bff;
+                color: white;
+                margin: 10px 0;
+                padding: 10px;
+                border-radius: 5px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <h1>jobcan-chrome-extensions</h1>
+        </div>
+        <div class="content">
+            <section>
+                <h2>Description</h2>
+                <p>
+                    This project is an unofficial Google Chrome extension for
+                    the attendance management service.
+                </p>
+            </section>
+            <section>
+                <h2>Features</h2>
+                <ul class="feature-list">
+                    <li>Keep man hour manage page for year month</li>
+                    <li>Automatically input man-hours</li>
+                </ul>
+            </section>
+        </div>
+    </body>
 </html>
