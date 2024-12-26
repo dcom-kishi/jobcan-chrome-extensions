@@ -8,7 +8,7 @@ document.addEventListener('click', (event: MouseEvent) => {
             return
         }
 
-        // 工数管理編集ボタン
+        // Man-hour management edit button
         if (value.includes('openEditWindow')) {
             const match = value.match(/\((\d+)\)/)
             if (match) {
@@ -18,7 +18,7 @@ document.addEventListener('click', (event: MouseEvent) => {
                 })
             }
         }
-        // 工数管理編集保存ボタン
+        // Man-hour management save button
         else if (value.includes('pushSave')) {
             chrome.runtime.sendMessage({
                 action: 'UpdateRedirectUrl',
@@ -30,12 +30,12 @@ document.addEventListener('click', (event: MouseEvent) => {
 
 chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
     if (message.action === 'EditManHourData') {
-        // 工数管理編集テーブル
+        // Man-hour management edit table
         let element = getElement('#edit-menu-contents > table > tbody')
 
-        // 工数未入力時にレコードを追加
+        // Add a record if no data is entered
         if (element.querySelectorAll('tr').length < 2) {
-            // レコード追加ボタン
+            // Record add button
             element = getElement(
                 '#edit-menu-contents > table > tbody > tr:nth-child(1) > td:nth-child(5) > span',
             )
@@ -47,7 +47,7 @@ chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
                 element.click()
             }
 
-            // プロジェクトに2番目の要素を設定
+            // Set the second element for the project
             let selectElement = getSelectElement(
                 `#edit-menu-contents > table > tbody > tr.daily > td:nth-child(2) > select`,
             )
@@ -56,13 +56,13 @@ chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
                 new Event('change', { bubbles: true, composed: true }),
             )
 
-            // タスクに2番目の要素を設定
+            // Set the second element for the task
             selectElement = getSelectElement(
                 `#edit-menu-contents > table > tbody > tr.daily > td:nth-child(3) > select`,
             )
             selectElement.selectedIndex = 1
 
-            // 工数(時間)に実労働時間を入力
+            // Enter actual working hours into man-hour (time) field
             element = getElement('#edit-menu-title')
             const text = element.textContent as string
             const match = text.match(/(?<=＝)\d{2}:\d{2}/)
