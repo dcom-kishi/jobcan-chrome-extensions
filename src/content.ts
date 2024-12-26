@@ -1,5 +1,18 @@
 import { getElement, getInputElement, getSelectElement } from './utils/html'
 
+function searchOptionByText(
+    selectElement: HTMLSelectElement,
+    searchText: string,
+): number {
+    for (let i = 0; i < selectElement.options.length; i++) {
+        const optionText = selectElement.options[i].text.toLowerCase()
+        if (optionText.includes(searchText.toLowerCase())) {
+            return i
+        }
+    }
+    return -1
+}
+
 document.addEventListener('click', (event: MouseEvent) => {
     const element = event.target as HTMLElement
     if (element.className === 'btn jbc-btn-primary') {
@@ -47,20 +60,25 @@ chrome.runtime.onMessage.addListener((message, _sender, _sendResponse) => {
                 element.click()
             }
 
-            // Set the second element for the project
             let selectElement = getSelectElement(
                 `#edit-menu-contents > table > tbody > tr.daily > td:nth-child(2) > select`,
             )
-            selectElement.selectedIndex = 1
-            selectElement.dispatchEvent(
-                new Event('change', { bubbles: true, composed: true }),
-            )
+            let index = searchOptionByText(selectElement, message.projectName)
+            if (index !== -1) {
+                selectElement.selectedIndex = index
+                selectElement.dispatchEvent(
+                    new Event('change', { bubbles: true, composed: true }),
+                )
+            }
 
             // Set the second element for the task
             selectElement = getSelectElement(
                 `#edit-menu-contents > table > tbody > tr.daily > td:nth-child(3) > select`,
             )
-            selectElement.selectedIndex = 1
+            index = searchOptionByText(selectElement, message.taskTitle)
+            if (index !== -1) {
+                selectElement.selectedIndex = index
+            }
 
             // Enter actual working hours into man-hour (time) field
             element = getElement('#edit-menu-title')

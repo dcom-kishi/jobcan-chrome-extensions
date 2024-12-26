@@ -8,8 +8,6 @@ import {
     getYearMonthDay,
 } from './utils/date'
 
-initializeStorage()
-
 function updateRedirectUrl(withSchema: boolean = false): void {
     const url = constants.JOBCAN.MAN_HOUR_MANAGE_URL
     let redirectUrl = url
@@ -73,6 +71,11 @@ function onMessage(message: any): boolean {
     } else if (message.action === 'UpdateRedirectUrl') {
         updateRedirectUrl(true)
         return true
+    } else if (message.action === 'SetProjectAndTask') {
+        const data: Record<string, any> = {}
+        data[constants.STORAGE_KEY.PROJECT_NAME] = message.project
+        data[constants.STORAGE_KEY.TASK_TITLE] = message.task
+        chrome.storage.local.set(data, () => {})
     }
     return false
 }
@@ -92,14 +95,21 @@ function onUpdatedTab(
 }
 
 function onCompleted(_details: chrome.webRequest.WebResponseCacheDetails) {
+    const storage = getStorage() as Record<string, any>
+    const projectName = storage[constants.STORAGE_KEY.PROJECT_NAME]
+    const taskTitle = storage[constants.STORAGE_KEY.TASK_TITLE]
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         if (tabs[0]?.id) {
             chrome.tabs.sendMessage(tabs[0].id, {
                 action: 'EditManHourData',
+                projectName: projectName,
+                taskTitle: taskTitle,
             })
         }
     })
 }
+
+initializeStorage()
 
 chrome.runtime.onInstalled.addListener(_details => {
     updateRedirectUrl()
