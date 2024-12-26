@@ -1,12 +1,12 @@
 import { initializeStorage, getStorage } from './common/storage'
 import { constants } from './common/constants'
-import './common/string-utils'
-import './common/date-utils'
+import './utils/string'
+import './utils/date'
 import {
     adjustYearMonthByClosingDay,
     convertToDate,
     getYearMonthDay,
-} from './common/date-utils'
+} from './utils/date'
 
 initializeStorage()
 
@@ -78,7 +78,7 @@ function onMessage(message: any): boolean {
 }
 
 function onUpdatedTab(
-    _: number,
+    _tabId: number,
     changeInfo: chrome.tabs.TabChangeInfo,
     tab: chrome.tabs.Tab,
 ) {
@@ -91,13 +91,26 @@ function onUpdatedTab(
     }
 }
 
-chrome.runtime.onInstalled.addListener(_ => {
+function onCompleted(_details: chrome.webRequest.WebResponseCacheDetails) {
+    chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
+        if (tabs[0]?.id) {
+            chrome.tabs.sendMessage(tabs[0].id, {
+                action: 'EditManHourData',
+            })
+        }
+    })
+}
+
+chrome.runtime.onInstalled.addListener(_details => {
     updateRedirectUrl()
 })
-chrome.runtime.onMessage.addListener((message, _, sendResponse) => {
+chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     const response = onMessage(message)
     sendResponse({ response })
 })
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     onUpdatedTab(tabId, changeInfo, tab)
+})
+chrome.webRequest.onCompleted.addListener(_details => onCompleted(_details), {
+    urls: [`${constants.JOBCAN.GET_MAN_HOUR_DATA_FOR_EDIT_URL}/*`],
 })

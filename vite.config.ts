@@ -17,6 +17,7 @@ const manifest = defineManifest({
         'declarativeNetRequestWithHostAccess',
         'storage',
         'tabs',
+        'webRequest',
     ],
     host_permissions: ['https://ssl.jobcan.jp/*'],
     action: {
