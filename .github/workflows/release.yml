@@ -10,23 +10,24 @@ jobs:
         runs-on: ubuntu-latest
 
         steps:
-            # Checkout the repository
             - name: Checkout Repository
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
 
-            # Setup Node.js and pnpm
-            - name: Setup Node.js and pnpm
-              uses: actions/setup-node@v3
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
               with:
                   # Specify the required Node.js version
                   node-version: 22.12.0
-                  cache: 'pnpm'
-            - name: Install pnpm
-              run: npm install -g pnpm
+
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  # Specify the required pnpm version
+                  version: 9.15.1
 
             # Install dependencies
             - name: Install Dependencies
-              run: pnpm install
+              run: pnpm i --frozen-lockfile
 
             # Run the build command
             - name: Run Build
