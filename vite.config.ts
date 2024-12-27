@@ -36,6 +36,7 @@ const manifest = defineManifest({
 
 export default defineConfig({
     plugins: [crx({ manifest })],
+    publicDir: 'public',
     build: {
         outDir: 'dist',
         emptyOutDir: true,

@@ -8,8 +8,6 @@ import {
     getYearMonthDay,
 } from './utils/date'
 
-initializeStorage()
-
 function updateRedirectUrl(withSchema: boolean = false): void {
     const url = constants.JOBCAN.MAN_HOUR_MANAGE_URL
     let redirectUrl = url
@@ -20,7 +18,6 @@ function updateRedirectUrl(withSchema: boolean = false): void {
         const schema = `?year=${year}&month=${month}`
         redirectUrl += schema
     }
-    console.log(`redirect url: ${redirectUrl}`)
     chrome.declarativeNetRequest.updateDynamicRules(
         {
             addRules: [
@@ -50,15 +47,24 @@ function updateRedirectUrl(withSchema: boolean = false): void {
                     'Error updating rules:',
                     chrome.runtime.lastError.message,
                 )
-            } else {
-                console.log('Rules updated successfully.')
             }
         },
     )
 }
 
-function onMessage(message: any): boolean {
-    if (message.action === 'SetYearMonth') {
+function onMessage(message: any): any {
+    let response = {}
+    if (message.action === 'GetProjectAndTask') {
+        const storage = getStorage() as Record<string, any>
+        const project = storage[constants.STORAGE_KEY.PROJECT]
+        const task = storage[constants.STORAGE_KEY.TASK]
+        response = { project: project, task: task }
+    } else if (message.action === 'SetProjectAndTask') {
+        const data: Record<string, any> = {}
+        data[constants.STORAGE_KEY.PROJECT] = message.project
+        data[constants.STORAGE_KEY.TASK] = message.task
+        chrome.storage.local.set(data, () => {})
+    } else if (message.action === 'SetYearMonth') {
         const date = getYearMonthDay(convertToDate(message.epoch))
         const adjustedDate = adjustYearMonthByClosingDay(
             date.year,
@@ -69,12 +75,10 @@ function onMessage(message: any): boolean {
         data[constants.STORAGE_KEY.YEAR] = adjustedDate.year
         data[constants.STORAGE_KEY.MONTH] = adjustedDate.mouth
         chrome.storage.local.set(data, () => {})
-        return true
     } else if (message.action === 'UpdateRedirectUrl') {
         updateRedirectUrl(true)
-        return true
     }
-    return false
+    return response
 }
 
 function onUpdatedTab(
@@ -92,21 +96,28 @@ function onUpdatedTab(
 }
 
 function onCompleted(_details: chrome.webRequest.WebResponseCacheDetails) {
+    const storage = getStorage() as Record<string, any>
+    const project = storage[constants.STORAGE_KEY.PROJECT]
+    const task = storage[constants.STORAGE_KEY.TASK]
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         if (tabs[0]?.id) {
             chrome.tabs.sendMessage(tabs[0].id, {
                 action: 'EditManHourData',
+                project: project,
+                task: task,
             })
         }
     })
 }
+
+initializeStorage()
 
 chrome.runtime.onInstalled.addListener(_details => {
     updateRedirectUrl()
 })
 chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
     const response = onMessage(message)
-    sendResponse({ response })
+    sendResponse(response)
 })
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
     onUpdatedTab(tabId, changeInfo, tab)
