@@ -59,6 +59,13 @@
             .save-btn:focus {
                 outline: none;
             }
+            .about-section {
+                background-color: #fff;
+                padding: 20px;
+                border-radius: 10px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                margin-bottom: 15px;
+            }
         </style>
     </head>
     <body>
@@ -66,6 +73,7 @@
             <h3>jobcan-chrome-extensions</h3>
         </div>
         <div class="content">
+            <!-- Description Section -->
             <section>
                 <h5>Description</h5>
                 <p>
@@ -73,13 +81,20 @@
                     the attendance management service.
                 </p>
             </section>
+
+            <!-- Features Section -->
             <section>
                 <h5>Features</h5>
                 <ul class="feature-list">
-                    <li>Keep man hour manage page for year month</li>
-                    <li>Automatically input man-hours</li>
+                    <li>Keep man-hour manage page for year month.</li>
+                    <li>
+                        Automatically enters projects, tasks, and man-hour.
+                        Required: Project, Task
+                    </li>
                 </ul>
             </section>
+
+            <!-- Settings Section -->
             <section class="form-section">
                 <h5>Settings</h5>
                 <form id="settings-form">
@@ -105,6 +120,40 @@
                         Save
                     </button>
                 </form>
+            </section>
+
+            <!-- About Section -->
+            <section class="about-section">
+                <h5>About</h5>
+                <p>
+                    If you have any questions or comments, please feel free to
+                    contact us at
+                    <a
+                        href="https://github.com/dcom-kishi"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        >kishi</a
+                    >.
+                </p>
+                <h6>licenses</h6>
+                <p>This project uses the following open source software:</p>
+                <ul>
+                    <li>
+                        <a
+                            href="https://github.com/google/material-design-icons"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >material-design-icons</a
+                        >
+                        -
+                        <a
+                            href="https://github.com/google/material-design-icons?tab=Apache-2.0-1-ov-file"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            >Apache-2.0 license
+                        </a>
+                    </li>
+                </ul>
             </section>
         </div>
         <script type="module" src="src/index.ts"></script>
