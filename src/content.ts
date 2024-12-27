@@ -15,19 +15,22 @@ function onButtonClick(button: HTMLElement) {
                     action: 'SetYearMonth',
                     epoch: parseInt(match[1]),
                 })
+                chrome.runtime.sendMessage({
+                    action: 'SetScrollBarPosition',
+                    position: window.scrollY,
+                })
             }
         }
         // Man-hour management save button
         else if (value.includes('pushSave')) {
             chrome.runtime.sendMessage({
                 action: 'UpdateRedirectUrl',
-                epoch: undefined,
             })
         }
     }
 }
 
-function addManHourRecord() {
+function addManHourRecord(): boolean {
     // Record add button
     const element = getElement(
         '#edit-menu-contents > table > tbody > tr:nth-child(1) > td:nth-child(5) > span',
@@ -35,10 +38,11 @@ function addManHourRecord() {
     if (element.className === 'btn jbc-btn-primary') {
         const value = element.getAttribute('onclick')
         if (value === null) {
-            return
+            return false
         }
         element.click()
     }
+    return true
 }
 
 function searchOptionByText(
@@ -46,8 +50,8 @@ function searchOptionByText(
     searchText: string,
 ): number {
     for (let i = 0; i < selectElement.options.length; i++) {
-        const optionText = selectElement.options[i].text.toLowerCase()
-        if (optionText.includes(searchText.toLowerCase())) {
+        const optionText = selectElement.options[i].text
+        if (optionText.includes(searchText)) {
             return i
         }
     }
@@ -65,7 +69,7 @@ function setProject(project: string) {
         element.dispatchEvent(
             new Event('change', { bubbles: true, composed: true }),
         )
-    } else {
+    } else if (project !== undefined) {
         console.log(`'${project}' was not found in the project select box.`)
     }
 }
@@ -78,7 +82,7 @@ function setTask(task: string) {
     const index = searchOptionByText(element, task)
     if (index !== -1) {
         element.selectedIndex = index
-    } else {
+    } else if (task !== undefined) {
         console.log(`'${task}' was not found in the task select box.`)
     }
 }
@@ -99,18 +103,27 @@ function setManHourTime() {
     }
 }
 
-function onMessage(message: any): any {
+function setScrollBarPosition(position: number) {
+    if (position !== undefined) {
+        window.scrollTo(0, position)
+    }
+}
+
+function onMessage(message: any) {
     if (message.action === 'EditManHourData') {
         // Man-hour management edit table
         const element = getElement('#edit-menu-contents > table > tbody')
         const recordCount = element.querySelectorAll('tr').length
         // Add a record if no data is entered
         if (recordCount < 2) {
-            addManHourRecord()
-            setProject(message.project)
-            setTask(message.task)
-            setManHourTime()
+            if (addManHourRecord()) {
+                setProject(message.project)
+                setTask(message.task)
+                setManHourTime()
+            }
         }
+    } else if (message.action === 'UpdateScrollBarPosition') {
+        setScrollBarPosition(message.position)
     }
 }
 

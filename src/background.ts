@@ -75,8 +75,15 @@ function onMessage(message: any): any {
         data[constants.STORAGE_KEY.YEAR] = adjustedDate.year
         data[constants.STORAGE_KEY.MONTH] = adjustedDate.mouth
         chrome.storage.local.set(data, () => {})
+    } else if (message.action === 'SetScrollBarPosition') {
+        const data: Record<string, any> = {}
+        data[constants.STORAGE_KEY.POSITION] = message.position
+        chrome.storage.local.set(data, () => {})
     } else if (message.action === 'UpdateRedirectUrl') {
         updateRedirectUrl(true)
+        const data: Record<string, any> = {}
+        data[constants.STORAGE_KEY.SAVED] = true
+        chrome.storage.local.set(data, () => {})
     }
     return response
 }
@@ -91,7 +98,23 @@ function onUpdatedTab(
         tab.url &&
         tab.url.startsWith(constants.JOBCAN.MAN_HOUR_MANAGE_URL)
     ) {
-        updateRedirectUrl()
+        const storage = getStorage() as Record<string, any>
+        const isSaved = storage[constants.STORAGE_KEY.SAVED]
+        if (isSaved) {
+            console.log('update redirect url')
+            updateRedirectUrl()
+
+            if (tab.id !== undefined) {
+                const position = storage[constants.STORAGE_KEY.POSITION]
+                chrome.tabs.sendMessage(tab.id, {
+                    action: 'UpdateScrollBarPosition',
+                    position: position,
+                })
+            }
+            const data: Record<string, any> = {}
+            data[constants.STORAGE_KEY.SAVED] = false
+            chrome.storage.local.set(data, () => {})
+        }
     }
 }
 

@@ -4,6 +4,8 @@ export const constants = {
         MONTH: 'manHourManage-targetMonth',
         PROJECT: 'projectName',
         TASK: 'taskName',
+        SAVED: 'saved',
+        POSITION: 'position',
     },
     JOBCAN: {
         MAN_HOUR_MANAGE_URL: 'https://ssl.jobcan.jp/employee/man-hour-manage',
