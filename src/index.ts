@@ -1,32 +1,45 @@
-window.addEventListener('DOMContentLoaded', () => {
-    const project = localStorage.getItem('project')
-    const task = localStorage.getItem('task')
+function loadProjectAndTaskForInputElementValue() {
+    const callback = chrome.runtime.sendMessage({ action: 'GetProjectAndTask' })
+    callback.then(response => {
+        const projectInput = document.getElementById(
+            'project-input',
+        ) as HTMLInputElement
+        if (response.project !== undefined) {
+            projectInput.value = response.project
+        }
 
+        const taskInput = document.getElementById(
+            'task-input',
+        ) as HTMLInputElement
+        if (response.task !== undefined) {
+            taskInput.value = response.task
+        }
+    }, console.log)
+}
+
+function saveProjectAndTaskForInputElementValue() {
     const projectInput = document.getElementById(
         'project-input',
     ) as HTMLInputElement
-    if (project !== null) {
-        projectInput.value = project
-    }
+    const project = projectInput.value
 
     const taskInput = document.getElementById('task-input') as HTMLInputElement
-    if (task !== null) {
-        taskInput.value = task
-    }
+    const task = taskInput.value
 
-    const saveButton = document.getElementById('save-btn') as HTMLButtonElement
-    saveButton.addEventListener('click', () => {
-        const project = projectInput.value
-        const task = taskInput.value
-
-        localStorage.setItem('project', project)
-        localStorage.setItem('task', task)
-
-        chrome.runtime.sendMessage({
-            action: 'SetProjectAndTask',
-            project: project,
-            task: task,
-        })
-        alert(`Project: ${project}, Task: ${task} has been saved`)
+    chrome.runtime.sendMessage({
+        action: 'SetProjectAndTask',
+        project: project,
+        task: task,
     })
+    alert(`Project: ${project}, Task: ${task} has been saved`)
+}
+
+function setSaveButtonClickEvent() {
+    const saveButton = document.getElementById('save-btn') as HTMLButtonElement
+    saveButton.addEventListener('click', saveProjectAndTaskForInputElementValue)
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+    loadProjectAndTaskForInputElementValue()
+    setSaveButtonClickEvent()
 })

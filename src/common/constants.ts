@@ -2,8 +2,8 @@ export const constants = {
     STORAGE_KEY: {
         YEAR: 'manHourManage-targetYear',
         MONTH: 'manHourManage-targetMonth',
-        PROJECT_NAME: 'projectName',
-        TASK_TITLE: 'taskTitle',
+        PROJECT: 'projectName',
+        TASK: 'taskName',
     },
     JOBCAN: {
         MAN_HOUR_MANAGE_URL: 'https://ssl.jobcan.jp/employee/man-hour-manage',
