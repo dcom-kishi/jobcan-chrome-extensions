@@ -3,9 +3,10 @@ import { crx, defineManifest } from '@crxjs/vite-plugin'
 
 const manifest = defineManifest({
     manifest_version: 3,
-    name: 'jobcan-chrome-extensions',
-    version: '1.0.0',
-    description: 'Chrome extension for Jobcan',
+    name: 'Jobcan Easy Man-hours Entry',
+    version: '1.2.2',
+    description:
+        'It makes tracking the man-hours management page and man-hour entry easy.',
     icons: {
         '16': 'images/icon-16.png',
         '32': 'images/icon-32.png',

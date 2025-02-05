@@ -1,24 +1,23 @@
-# :sparkles:Overview
+# :sparkles: Jobcan Easy Man-hours Entry
 
 An unofficial Google Chrome extension designed to streamline your attendance management service [Jobcan](https://jobcan.ne.jp/) by [DONUTS Inc.](https://www.donuts.ne.jp/).Inc..
 
 ## :rocket: Features
 
-- :calendar: Simplified Time Management:  
-  Effortlessly keep track of your man-hour management pages for the entire year and specific months.
-  
-- :robot: Automation at Your Fingertips:  
+- :calendar: Easy tracking on man-hours management pages:  
+  Effortlessly keep track of your man-hours management pages for the entire year and specific months.
+- :robot: Easy enter man-hours:  
   Automatically inputs project names, tasks, and man-hours. Just set your Project and Task to get started.
 
 ## :book: How to Use
 
-1. Go to the [Releases](https://github.com/dcom-kishi/jobcan-chrome-extensions/releases) page and download the latest `jobcan-chrome-extensions.zip`. Extract the contents.
+1. Go to the [Releases](https://github.com/dcom-kishi/jobcan-easy-man-hours-entry/releases) page and download the latest `jobcan-easy-man-hours-entry.zip`. Extract the contents.
 
 2. Open Google Chrome and navigate to `chrome://extensions/`.
 
 3. Enable Developer Mode in the top-right corner.
 
-4. Click on `Load unpacked` and select the directory where you extracted `jobcan-chrome-extensions.zip`.
+4. Click on `Load unpacked` and select the directory where you extracted `jobcan-easy-man-hours-entry.zip`.
 
 5. The extension is now ready to use!
 

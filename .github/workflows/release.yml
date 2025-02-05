@@ -40,7 +40,7 @@ jobs:
 
             # Compress the dist directory into a zip file (with a specified file name)
             - name: Compress dist directory
-              run: cd ./dist && zip -r jobcan-chrome-extensions.zip ./*
+              run: cd ./dist && zip -r jobcan-easy-man-hours-entry.zip ./*
 
             # Create a release
             - name: Create Release
@@ -61,6 +61,6 @@ jobs:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
               with:
                   upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./dist/jobcan-chrome-extensions.zip
-                  asset_name: jobcan-chrome-extensions.zip
+                  asset_path: ./dist/jobcan-easy-man-hours-entry.zip
+                  asset_name: jobcan-easy-man-hours-entry.zip
                   asset_content_type: application/zips
